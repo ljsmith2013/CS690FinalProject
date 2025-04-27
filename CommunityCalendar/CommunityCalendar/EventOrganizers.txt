@@ -1,0 +1,5 @@
+JamesSmith|Sample Event|05/26/2025|12:00 PM|This is a sample event.
+SarahSmith
+new
+TestCase
+TestCase|Testing, An Event Entry With Comma|12/25/26|5:15 PM|This is a test, to make sure that commas do not cause formatting issues.
