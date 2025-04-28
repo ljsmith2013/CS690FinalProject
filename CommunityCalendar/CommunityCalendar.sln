@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunityCalendar.Tests", "CommunityCalendar.Tests\CommunityCalendar.Tests.csproj", "{8D3487C3-B695-4F35-A01B-48A69832EE93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunityCalendar", "CommunityCalendar\CommunityCalendar.csproj", "{CF17FDAD-D02B-4575-B1C4-F9796D807BCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +14,15 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D3487C3-B695-4F35-A01B-48A69832EE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3487C3-B695-4F35-A01B-48A69832EE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D3487C3-B695-4F35-A01B-48A69832EE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3487C3-B695-4F35-A01B-48A69832EE93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF17FDAD-D02B-4575-B1C4-F9796D807BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF17FDAD-D02B-4575-B1C4-F9796D807BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF17FDAD-D02B-4575-B1C4-F9796D807BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF17FDAD-D02B-4575-B1C4-F9796D807BCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

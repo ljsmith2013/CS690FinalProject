@@ -1,10 +1,11 @@
 ﻿namespace CommunityCalendar;
 using System;
 using System.IO;
+using System.Net;
 
-class Program
+public class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         Console.WriteLine("Please Select Mode: Event Organizer or Community Member (Type event organizer or community member, or type exit to leave the application.) ");
         string mode = Console.ReadLine();
@@ -34,18 +35,7 @@ class Program
                         return;
                     }
 
-                    bool userExists = false;
-                    foreach(var line in File.ReadAllLines("EventOrganizers.txt")) {
-                        if(line.StartsWith(enteredUser + "|")) {
-                            var splitLines = line.Split("|");
-                            if (splitLines[0] == enteredUser) {
-                                userExists = true;
-                                break;
-                            }
-                        } 
-                    }
-
-                if (userExists) {
+                if (UserFunctions.UserExists(enteredUser)) {
                     Console.WriteLine("Welcome Back! " + enteredUser);
                     break;
                 }
@@ -55,8 +45,7 @@ class Program
                     Console.WriteLine("Would you like to create a profile with that username or try again? (Type create or try again) ");
                     string userChoice = Console.ReadLine();
                     if (userChoice == "create") {
-                        File.AppendAllText("EventOrganizers.txt", Environment.NewLine + enteredUser + "|");
-                        Console.WriteLine("Created new user " + enteredUser);
+                        UserFunctions.CreateUser(enteredUser);
                         break;
                         }
                     }
@@ -73,19 +62,11 @@ class Program
                         return;
                     }
 
-                    bool exists = false;
-                    foreach(var line in File.ReadAllLines("EventOrganizers.txt")) {
-                        var splitLines = line.Split("|");
-                        if (splitLines[0] == enteredUser){
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if(exists) {
+                    if(UserFunctions.UserExists(enteredUser)) {
                         Console.WriteLine(enteredUser + " already exists. Please try a different username." + "\n");
                     }
                     else {
-                        File.AppendAllText("EventOrganizers.txt", Environment.NewLine + enteredUser);
+                        UserFunctions.CreateUser(enteredUser);
                         break;
                     }
                 }
@@ -100,18 +81,15 @@ class Program
             }
 
             if (nextAction == "view") {
-                foreach (var line in File.ReadAllLines("EventOrganizers.txt")) {
+                var userLines = EventFunctions.GetUserEvents(enteredUser);
+                foreach(var line in userLines) {
                     var eachEvent = line.Split("|");
-                    if (eachEvent.Length < 5) continue;
-
-                    if (eachEvent[0] == enteredUser) {
                         string recordedDT = eachEvent[2] + " " + eachEvent[3];
                         if(!DateTime.TryParse(recordedDT, out var dt))
                             dt = DateTime.MinValue;
                         Console.WriteLine("\n" + "Event Name: " + eachEvent[1] + "\n" + "When: " + dt.ToString("MM-dd-yyyy hh:mm tt") + "\n" + "Event Details: "+ eachEvent[4]);
                     }
                 }
-            }
             if (nextAction == "create") {
                 Console.WriteLine("Add a new event: ");
                 Console.Write("Event Name: ");
@@ -123,39 +101,49 @@ class Program
                 Console.Write("Event Details: ");
                 var eventDetails = Console.ReadLine();
 
-                var newEntry = enteredUser + "|" + eventName + "|" + eventDate + "|" + eventTime + "|" + eventDetails;
-
-                File.AppendAllText("EventOrganizers.txt", Environment.NewLine + newEntry);
-                Console.WriteLine("New event " + eventName + " successfully created!");
+                EventFunctions.NewEvent(enteredUser, eventName, eventDate, eventTime, eventDetails);
             }
         }
         if (mode == "community member") {
-            Console.WriteLine("Please enter a date to see what events are happening on that day? (Enter date as MM/DD/YYYY, or type back to return to the main menu)");
-            var selectedDate = Console.ReadLine();
+            while(true){
+                Console.WriteLine("Please enter a date to see what events are happening on that day? (Enter date as MM/DD/YYYY, or type back to return to the main menu)");
+                var selectedDate = Console.ReadLine();
 
-            if(selectedDate == "back") {
-                Main(args);
-                return;
-            }
+                if(selectedDate == "back") {
+                    Main(args);
+                    return;
+                }
 
-            bool eventsFound = false;
+                bool eventsFound = false;
 
-            foreach(var line in File.ReadAllLines("EventOrganizers.txt")) {
-                var eachEvent = line.Split('|');
+                var dateLines = EventFunctions.GetEventsforDate(selectedDate);
+                foreach(var line in dateLines) {
+                    var eachEvent = line.Split('|');
 
-                if(eachEvent.Length < 5) continue;
+                    if(eachEvent.Length < 5) continue;
 
-                if(eachEvent[2] == selectedDate)  {
-                    string recordedDT = eachEvent[2] + " " + eachEvent[3];
-                        if(!DateTime.TryParse(recordedDT, out var dt))
-                            dt = DateTime.MinValue;
-                    Console.WriteLine("Event Organizer: " + eachEvent[0] + "\n" + "Event Name: " + eachEvent[1] + "\n" + "When: " + dt.ToString("MM-dd-yyyy hh:mm tt") + "\n" + "Event Details: "+ eachEvent[4]);
+                    if(eachEvent[2] == selectedDate)  {
+                        string recordedDT = eachEvent[2] + " " + eachEvent[3];
+                            if(!DateTime.TryParse(recordedDT, out var dt))
+                                dt = DateTime.MinValue;
+                        Console.WriteLine("Event Organizer: " + eachEvent[0] + "\n" + "Event Name: " + eachEvent[1] + "\n" + "When: " + dt.ToString("MM-dd-yyyy hh:mm tt") + "\n" + "Event Details: "+ eachEvent[4]);
 
-                    eventsFound = true;
+                        eventsFound = true;
+                    }
+                }
+                if(!eventsFound)
+                    Console.WriteLine("No Events found on " + selectedDate + ".");
+                
+                Console.WriteLine("Would you like to search for another event? (type yes or no)");
+                var anotherSearch = Console.ReadLine();
+                if (anotherSearch == "yes") {
+                    continue;
+                }
+                else{
+                    Main(args);
+                    return;
                 }
             }
-            if(!eventsFound)
-                Console.WriteLine("No Events found on " + selectedDate + ".");
         }
     }
 }
