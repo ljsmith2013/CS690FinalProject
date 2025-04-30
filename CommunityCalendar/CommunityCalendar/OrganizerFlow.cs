@@ -81,12 +81,21 @@ public static class OrganizerFlow {
 
     static void ShowEvents(string username) {
         var userLines = EventFunctions.GetUserEvents(username);
-        foreach(var line in userLines) {
+
+        if (userLines.Count == 0) {
+            var noeventsaction = PromptHelper.YesNoPrompt("You currently have no events. Would you like to create a new event? (no will return you to the main menu)");
+            if(noeventsaction == "yes")
+                CreateEventFlow(username);
+                return;
+        }
+        else {
+            foreach(var line in userLines) {
             var eachEvent = line.Split("|");
             string recordedDT = eachEvent[2] + " " + eachEvent[3];
             if(!DateTime.TryParse(recordedDT, out var dt))
                 dt = DateTime.MinValue;
             Console.WriteLine("\n" + "Event Name: " + eachEvent[1] + "\n" + "When: " + dt.ToString("MM-dd-yyyy hh:mm tt") + "\n" + "Event Details: "+ eachEvent[4]);
+            }
         }
     }
     static void ManageEvents(string username) {
