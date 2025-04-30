@@ -8,16 +8,17 @@ using System.Globalization;
 public class Program
 {
     public static void Main(string[] args) {
-        var mode = PromptHelper.UserMode();
+        while(true) {
+            var mode = PromptHelper.UserMode();
 
-        if(mode == "exit") {
-            return;
-        }
+            if(mode == "exit")
+            break;
 
-        if (mode == "event organizer")
-            OrganizerFlow.Run(args);
-        
-        else if (mode == "community member")
-            CommunityFlow.Run(args);
+            if (mode == "event organizer")
+                OrganizerFlow.Run(args);
+            
+            else if (mode == "community member")
+                CommunityFlow.Run(args);
+            }
         }
     }
